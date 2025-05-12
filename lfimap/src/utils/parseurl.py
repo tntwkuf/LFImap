@@ -184,10 +184,13 @@ def parse_url_from_request_file(file_path, force_ssl=False):
             else:
                 raise Exception("Host header not found in the request.")
 
-            if args['force_ssl'] or force_ssl:
-                url = f"https://{host}{path}"
+            if path.startswith('http://') or path.startswith('https://'):
+                url = path
             else:
-                url = f"http://{host}{path}"
+                if args['force_ssl'] or force_ssl:
+                    url = f"https://{host}{path}"
+                else:
+                    url = f"http://{host}{path}"
             if query_params:
                 url += f"?{'&'.join(query_params)}"
 
